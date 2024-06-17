@@ -1,4 +1,3 @@
-
 const updateIncidentById = async (id, updatedIncident) => {
   const response = await esClient.update({
     index: indexName,
@@ -82,3 +81,51 @@ const createIncident = async (req, res) => {
 };
 
 
+
+const getIncidentsByChannel = async (req, res) => {
+  const { channelName } = req.body;
+  try {
+    const incidents = await incidentModel.searchIncidentsByField('channelName', channelName);
+    res.json(incidents);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getIncidentsByApp = async (req, res) => {
+  const { appName } = req.body;
+  try {
+    const incidents = await incidentModel.searchIncidentsByField('appName', appName);
+    res.json(incidents);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getIncidentsBySeverity = async (req, res) => {
+  const { severity } = req.body;
+  try {
+    const incidents = await incidentModel.searchIncidentsByField('severity', severity);
+    res.json(incidents);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const searchIncidentsByField = async (field, value) => {
+  const response = await esClient.search({
+    index: indexName,
+    body: {
+      query: {
+        match: { [field]: value }
+      }
+    }
+  });
+  return response.hits.hits.map(hit => hit._source);
+};
+
+
+router.post('/channel', incidentController.getIncidentsByChannel);
+router.post('/app', incidentController.getIncidentsByApp);
+router.post('/severity', incidentController.getIncidentsBySeverity);
