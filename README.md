@@ -69,3 +69,16 @@ startServer();
 
 router.post('/', incidentController.createIncident); // Add this line
 
+
+
+const createIncident = async (req, res) => {
+  const incident = req.body;
+  try {
+    const response = await incidentModel.createIncident(incident);
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
