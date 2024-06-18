@@ -129,3 +129,60 @@ const searchIncidentsByField = async (field, value) => {
 router.post('/channel', incidentController.getIncidentsByChannel);
 router.post('/app', incidentController.getIncidentsByApp);
 router.post('/severity', incidentController.getIncidentsBySeverity);
+
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+const users = [
+  { username: "user1", password: "password1" },
+  { username: "user2", password: "password2" },
+  { username: "user3", password: "password3" },
+];
+
+let loggedInUsers = [];
+
+const authenticate = (username, password, callback) => {
+  const user = users.find(
+    (u) => u.username === username && u.password === password
+  );
+
+  if (!user) {
+    return callback(new Error("Invalid credentials"));
+  }
+  callback(null, true);
+};
+
+app.post("/api/authenticate", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
+
+  authenticate(username, password, (err, success) => {
+    if (err || !success) {
+      return res.status(401).json({ message: "Authentication failed" });
+    }
+
+    if (!loggedInUsers.includes(username)) {
+      loggedInUsers.push(username);
+    }
+
+    res.status(200).json({ message: "Authentication successful" });
+  });
+});
+
+app.get("/api/loggedin", (req, res) => {
+  res.json({ loggedInUsers });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
