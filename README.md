@@ -1,188 +1,173 @@
-const updateIncidentById = async (id, updatedIncident) => {
-  const response = await esClient.update({
-    index: indexName,
-    id: id,
-    body: {
-      doc: updatedIncident
-    }
-  });
-  return response;
-};
+var express = require('express');
+var app = express();
+var ldap = require('ldapjs');
 
+app.listen(3000, function () {
+    console.log("server started")
+})
 
+/*update the url according to your ldap address*/
+var client = ldap.createClient({
+    url: 'ldap://127.0.0.1:10389'
+});
 
-const updateIncident = async (req, res) => {
-  const { id } = req.params;
-  const updatedIncident = req.body;
-  try {
-    const response = await incidentModel.updateIncidentById(id, updatedIncident);
-    res.json(response);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+/*use this to create connection*/
+function authenticateDN(username, password) {
 
- incidentController.getIncidentsByChannel);
-router.put('/:id', incidentController.updateIncident);
+    /*bind use for authentication*/
+    client.bind(username, password, function (err) {
+        if (err) {
+            console.log("Error in new connetion " + err)
+        } else {
+            /*if connection is success then go for any operation*/
+            console.log("Success");
+            //searchUser();
+            //addUser();
+            //deleteUser();
+            //addUserToGroup('cn=Administrators,ou=groups,ou=system');
+            //deleteUserFromGroup('cn=Administrators,ou=groups,ou=system');
+            //updateUser('cn=test,ou=users,ou=system');
+            //compare('cn=test,ou=users,ou=system');
+            modifyDN('cn=bar,ou=users,ou=system');
 
-
-
-const createIncidentIndex = async () => {
-  const exists = await esClient.indices.exists({ index: indexName });
-
-  if (!exists.body) {
-    await esClient.indices.create({
-      index: indexName,
-      body: {
-        mappings: {
-          properties: {
-            incidentName: { type: 'text' },
-            channelName: { type: 'text' },
-            appName: { type: 'text' },
-            severity: { type: 'text' },
-            description: { type: 'text' }, // Add any other fields as needed
-            timestamp: { type: 'date' }
-          }
         }
-      }
     });
-  }
-};
+}
 
-const { createIncidentIndex } = require('./models/incidentModel');
+/*use this to search user, add your condition inside filter*/
+function searchUser() {
+    var opts = {
+        //  filter: '(objectClass=*)',  //simple search
+        //  filter: '(&(uid=2)(sn=John))',// and search
+        filter: '(|(uid=2)(sn=John)(cn=Smith))', // or search
+        scope: 'sub',
+        attributes: ['sn']
+    };
 
-
-const startServer = async () => {
-  try {
-    await createIncidentIndex();
-    app.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}`);
+    client.search('ou=users,ou=system', opts, function (err, res) {
+        if (err) {
+            console.log("Error in search " + err)
+        } else {
+            res.on('searchEntry', function (entry) {
+                console.log('entry: ' + JSON.stringify(entry.object));
+            });
+            res.on('searchReference', function (referral) {
+                console.log('referral: ' + referral.uris.join());
+            });
+            res.on('error', function (err) {
+                console.error('error: ' + err.message);
+            });
+            res.on('end', function (result) {
+                console.log('status: ' + result.status);
+            });
+        }
     });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-  }
-};
+}
 
-startServer();
+/*use this to add user*/
+function addUser() {
+    var entry = {
+        sn: 'bar',
+        email: ['foo@bar.com', 'foo1@bar.com'],
+        objectclass: 'inetOrgPerson'
+    };
+    client.add('cn=foo12,ou=users,ou=system', entry, function (err) {
+        if (err) {
+            console.log("err in new user " + err);
+        } else {
+            console.log("added user")
+        }
+    });
+}
 
+/*use this to delete user*/
+function deleteUser() {
+    client.del('cn=foo1,ou=users,ou=system', function (err) {
+        if (err) {
+            console.log("err in delete new user " + err);
+        } else {
+            console.log("deleted user")
+        }
+    });
+}
 
-router.post('/', incidentController.createIncident); // Add this line
+/*use this to add user to group*/
+function addUserToGroup(groupname) {
+    var change = new ldap.Change({
+        operation: 'add',
+        modification: {
+            uniqueMember: 'cn=jill,ou=users,ou=system'
+        }
+    });
 
+    client.modify(groupname, change, function (err) {
+        if (err) {
+            console.log("err in add user in a group " + err);
+        } else {
+            console.log("added user in a group")
+        }
+    });
+}
 
+/*use this to delete user from group*/
+function deleteUserFromGroup(groupname) {
+    var change = new ldap.Change({
+        operation: 'delete',
+        modification: {
+            uniqueMember: 'cn=hiii,ou=users,ou=system'
+        }
+    });
 
-const createIncident = async (req, res) => {
-  const incident = req.body;
-  try {
-    const response = await incidentModel.createIncident(incident);
-    res.json(response);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    client.modify(groupname, change, function (err) {
+        if (err) {
+            console.log("err in delete  user in a group " + err);
+        } else {
+            console.log("deleted  user from a group")
+        }
+    });
+}
 
+/*use this to update user attributes*/
+function updateUser(dn) {
+    var change = new ldap.Change({
+        operation: 'add',  //use add to add new attribute
+        //operation: 'replace', // use replace to update the existing attribute
+        modification: {
+            displayName: '657'
+        }
+    });
 
+    client.modify(dn, change, function (err) {
+        if (err) {
+            console.log("err in update user " + err);
+        } else {
+            console.log("add update user");
+        }
+    });
+}
 
-const getIncidentsByChannel = async (req, res) => {
-  const { channelName } = req.body;
-  try {
-    const incidents = await incidentModel.searchIncidentsByField('channelName', channelName);
-    res.json(incidents);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+/*use this to compare user is already existed or not*/
+function compare(dn) {
+    client.compare(dn, 'sn', '1263', function (err, matched) {
+        if (err) {
+            console.log("err in update user " + err);
+        } else {
+            console.log("result :" + matched);
+        }
+    });
+}
 
-const getIncidentsByApp = async (req, res) => {
-  const { appName } = req.body;
-  try {
-    const incidents = await incidentModel.searchIncidentsByField('appName', appName);
-    res.json(incidents);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+/*use this to modify the dn of existing user*/
+function modifyDN(dn) {
 
-const getIncidentsBySeverity = async (req, res) => {
-  const { severity } = req.body;
-  try {
-    const incidents = await incidentModel.searchIncidentsByField('severity', severity);
-    res.json(incidents);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    client.modifyDN(dn, 'cn=ba4r', function (err) {
+        if (err) {
+            console.log("err in update user " + err);
+        } else {
+            console.log("result :");
+        }
+    });
+}
 
-
-const searchIncidentsByField = async (field, value) => {
-  const response = await esClient.search({
-    index: indexName,
-    body: {
-      query: {
-        match: { [field]: value }
-      }
-    }
-  });
-  return response.hits.hits.map(hit => hit._source);
-};
-
-
-router.post('/channel', incidentController.getIncidentsByChannel);
-router.post('/app', incidentController.getIncidentsByApp);
-router.post('/severity', incidentController.getIncidentsBySeverity);
-
-
-const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
-const port = 3000;
-
-app.use(bodyParser.json());
-
-const users = [
-  { username: "user1", password: "password1" },
-  { username: "user2", password: "password2" },
-  { username: "user3", password: "password3" },
-];
-
-let loggedInUsers = [];
-
-const authenticate = (username, password, callback) => {
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
-
-  if (!user) {
-    return callback(new Error("Invalid credentials"));
-  }
-  callback(null, true);
-};
-
-app.post("/api/authenticate", (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Username and password are required" });
-  }
-
-  authenticate(username, password, (err, success) => {
-    if (err || !success) {
-      return res.status(401).json({ message: "Authentication failed" });
-    }
-
-    if (!loggedInUsers.includes(username)) {
-      loggedInUsers.push(username);
-    }
-
-    res.status(200).json({ message: "Authentication successful" });
-  });
-});
-
-app.get("/api/loggedin", (req, res) => {
-  res.json({ loggedInUsers });
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+/*create authentication*/
+authenticateDN("uid=admin,ou=system", "secret")
