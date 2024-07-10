@@ -171,3 +171,47 @@ function modifyDN(dn) {
 
 /*create authentication*/
 authenticateDN("uid=admin,ou=system", "secret")
+
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const SearchSummary = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [summary, setSummary] = useState('');
+
+  const handleSearch = async () => {
+    try {
+      // Replace this with your actual API call to fetch the summary
+      const response = await axios.post('https://api.example.com/get-summary', { searchTerm });
+      setSummary(response.data.summary);
+    } catch (error) {
+      console.error('Error fetching summary:', error);
+      setSummary('Failed to fetch summary.');
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Enter search term"
+        className="px-4 py-2 mb-4 text-lg border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        onClick={handleSearch}
+        className="px-6 py-2 text-lg text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Search
+      </button>
+      {summary && (
+        <div className="mt-6 p-4 bg-white rounded-lg shadow-lg max-w-md text-center">
+          {summary}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SearchSummary;
