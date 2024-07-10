@@ -1,3 +1,8 @@
+<div className="mt-6 p-6 bg-red-500 text-white rounded-lg shadow-lg max-w-md text-center border-t-4 border-red-700 transition transform duration-500 ease-in-out hover:-translate-y-1 hover:shadow-2xl">
+  <h2 className="text-2xl font-bold mb-4 text-white">Summary</h2>
+  <p className="text-white"> {summary} </p>
+</div>
+
 import React, { useState } from 'react';
 import axios from 'axios';
 
