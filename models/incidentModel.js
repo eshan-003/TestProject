@@ -8,6 +8,115 @@ const rolesData = {
 
 const Checklist = () => {
   const [roles, setRoles] = useState(Object.keys(rolesData));
+  const [expandedRole, setExpandedRole] = useState(null);
+  const [newItem, setNewItem] = useState('');
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  const handleAccordionClick = (role) => {
+    setExpandedRole(expandedRole === role ? null : role);
+  };
+
+  const handleAddItem = (role) => {
+    if (newItem.trim() !== '') {
+      rolesData[role].push(newItem);
+      setNewItem('');
+    }
+  };
+
+  const handleRemoveItem = (role, index) => {
+    rolesData[role].splice(index, 1);
+    setExpandedRole(null);  // Close accordion to refresh the state
+    setExpandedRole(role);  // Re-open accordion to show updated state
+  };
+
+  const handleEditItem = (role, index) => {
+    setEditingIndex({ role, index });
+    setNewItem(rolesData[role][index]);
+  };
+
+  const handleSaveEditItem = (role) => {
+    const { role: r, index } = editingIndex;
+    rolesData[r][index] = newItem;
+    setNewItem('');
+    setEditingIndex(null);
+    setExpandedRole(null);  // Close accordion to refresh the state
+    setExpandedRole(role);  // Re-open accordion to show updated state
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-2xl">
+        <h1 className="text-3xl font-bold mb-4 text-center">Role-based Checklist</h1>
+        {roles.map((role) => (
+          <div key={role} className="mb-4">
+            <div
+              className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded"
+              onClick={() => handleAccordionClick(role)}
+            >
+              {role}
+            </div>
+            {expandedRole === role && (
+              <div className="bg-white p-4 shadow rounded mt-2">
+                <ul className="list-disc pl-6">
+                  {rolesData[role].map((item, index) => (
+                    <li key={index} className="flex items-center justify-between mb-2">
+                      <span className="text-lg">{item}</span>
+                      <div className="flex space-x-2">
+                        <button
+                          className="bg-yellow-500 text-white px-2 py-1 rounded"
+                          onClick={() => handleEditItem(role, index)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-2 py-1 rounded"
+                          onClick={() => handleRemoveItem(role, index)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 flex">
+                  <textarea
+                    value={newItem}
+                    onChange={(e) => setNewItem(e.target.value)}
+                    placeholder="Add new item"
+                    className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+                    rows="3"
+                  />
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={() => (editingIndex ? handleSaveEditItem(role) : handleAddItem(role))}
+                  >
+                    {editingIndex ? 'Save' : 'Add'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Checklist;
+
+
+
+
+import React, { useState } from 'react';
+
+const rolesData = {
+  Developer: ['Write Code', 'Fix Bugs', 'Review PRs'],
+  Designer: ['Create Mockups', 'Design UI', 'Update Style Guide'],
+  Tester: ['Write Test Cases', 'Perform Testing', 'Log Defects']
+};
+
+const Checklist = () => {
+  const [roles, setRoles] = useState(Object.keys(rolesData));
   const [selectedRole, setSelectedRole] = useState('');
   const [checklist, setChecklist] = useState([]);
   const [newItem, setNewItem] = useState('');
