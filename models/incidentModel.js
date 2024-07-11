@@ -12,6 +12,154 @@ const Checklist = () => {
   const [checklist, setChecklist] = useState([]);
   const [newItem, setNewItem] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
+  const [roleInput, setRoleInput] = useState('');
+
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    setChecklist(rolesData[role]);
+  };
+
+  const handleBackToDropdown = () => {
+    setSelectedRole('');
+    setChecklist([]);
+    setNewItem('');
+    setEditingIndex(null);
+  };
+
+  const handleAddItem = () => {
+    if (newItem.trim() !== '') {
+      setChecklist([...checklist, newItem]);
+      setNewItem('');
+    }
+  };
+
+  const handleRemoveItem = (index) => {
+    const updatedChecklist = checklist.filter((_, i) => i !== index);
+    setChecklist(updatedChecklist);
+  };
+
+  const handleEditItem = (index) => {
+    setEditingIndex(index);
+    setNewItem(checklist[index]);
+  };
+
+  const handleSaveEditItem = () => {
+    const updatedChecklist = checklist.map((item, i) =>
+      i === editingIndex ? newItem : item
+    );
+    setChecklist(updatedChecklist);
+    setNewItem('');
+    setEditingIndex(null);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      {selectedRole === '' ? (
+        <div className="w-full max-w-md">
+          <label className="block text-gray-700 text-2xl font-bold mb-4 text-center">Select a Role</label>
+          <div className="relative">
+            <input
+              type="text"
+              value={roleInput}
+              onChange={(e) => setRoleInput(e.target.value)}
+              placeholder="Type or select a role"
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              list="roles"
+            />
+            <datalist id="roles">
+              {roles.map((role) => (
+                <option key={role} value={role} />
+              ))}
+            </datalist>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline absolute right-0 top-0 mt-2 mr-2"
+              onClick={() => handleRoleSelect(roleInput)}
+            >
+              Search
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full max-w-2xl bg-white p-8 rounded shadow-md">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-800">{selectedRole} Checklist</h2>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={handleBackToDropdown}
+            >
+              Back to Role Selection
+            </button>
+          </div>
+          <ul className="list-disc list-inside mb-6">
+            {checklist.map((item, index) => (
+              <li key={index} className="flex justify-between items-center mb-2">
+                <span className="text-lg text-gray-800">{item}</span>
+                <div>
+                  <button
+                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline mr-2"
+                    onClick={() => handleEditItem(index)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
+                    onClick={() => handleRemoveItem(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="flex mb-6">
+            <input
+              type="text"
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+              placeholder="Add new item"
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+            />
+            {editingIndex !== null ? (
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={handleSaveEditItem}
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={handleAddItem}
+              >
+                Add
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Checklist;
+
+
+
+
+import React, { useState } from 'react';
+
+const rolesData = {
+  Developer: ['Write Code', 'Fix Bugs', 'Review PRs'],
+  Designer: ['Create Mockups', 'Design UI', 'Update Style Guide'],
+  Tester: ['Write Test Cases', 'Perform Testing', 'Log Defects']
+};
+
+const Checklist = () => {
+  const [roles, setRoles] = useState(Object.keys(rolesData));
+  const [selectedRole, setSelectedRole] = useState('');
+  const [checklist, setChecklist] = useState([]);
+  const [newItem, setNewItem] = useState('');
+  const [editingIndex, setEditingIndex] = useState(null);
 
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
