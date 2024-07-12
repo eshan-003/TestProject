@@ -1,3 +1,77 @@
+export const rolesChecklist = [
+  {
+    role: "Manager",
+    checklist: [
+      "Conduct team meetings",
+      "Approve budgets",
+      "Monitor project progress",
+      "Handle escalations",
+      "Evaluate team performance"
+    ]
+  },
+  {
+    role: "Developer",
+    checklist: [
+      "Write and optimize code",
+      "Fix bugs and issues",
+      "Participate in code reviews",
+      "Collaborate with designers and testers",
+      "Update documentation"
+    ]
+  },
+  {
+    role: "Code Reviewer",
+    checklist: [
+      "Review code for best practices",
+      "Ensure code quality",
+      "Check for security vulnerabilities",
+      "Provide constructive feedback",
+      "Approve or request changes"
+    ]
+  },
+  {
+    role: "Release Coordinator",
+    checklist: [
+      "Plan release schedules",
+      "Coordinate with teams",
+      "Ensure all release criteria are met",
+      "Communicate release status",
+      "Handle post-release activities"
+    ]
+  },
+  {
+    role: "PSG",
+    checklist: [
+      "Provide technical support",
+      "Resolve customer issues",
+      "Document support cases",
+      "Collaborate with development team",
+      "Conduct customer training sessions"
+    ]
+  },
+  {
+    role: "PTE",
+    checklist: [
+      "Execute performance tests",
+      "Analyze test results",
+      "Identify performance bottlenecks",
+      "Recommend optimizations",
+      "Document performance metrics"
+    ]
+  },
+  {
+    role: "DARE",
+    checklist: [
+      "Define data requirements",
+      "Analyze data trends",
+      "Create data reports",
+      "Ensure data accuracy",
+      "Collaborate with data engineers"
+    ]
+  }
+];
+
+
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
