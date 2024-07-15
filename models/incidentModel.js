@@ -1,4 +1,54 @@
 import React, { useState } from 'react';
+import { FaPlus, FaTimes } from 'react-icons/fa';
+
+const PersonaManager = () => {
+  const [selectedPersonas, setSelectedPersonas] = useState([]);
+  const personas = ['Persona 1', 'Persona 2', 'Persona 3'];
+
+  const addPersona = (persona) => {
+    if (!selectedPersonas.includes(persona)) {
+      setSelectedPersonas([...selectedPersonas, persona]);
+    }
+  };
+
+  const removePersona = (persona) => {
+    setSelectedPersonas(selectedPersonas.filter((p) => p !== persona));
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={selectedPersonas.join(', ')}
+        readOnly
+        placeholder="Selected Personas"
+      />
+      <div>
+        {personas.map((persona) => (
+          <div key={persona} style={{ margin: '10px 0' }}>
+            <span>{persona}</span>
+            {selectedPersonas.includes(persona) ? (
+              <FaTimes
+                style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}
+                onClick={() => removePersona(persona)}
+              />
+            ) : (
+              <FaPlus
+                style={{ cursor: 'pointer', color: 'green', marginLeft: '10px' }}
+                onClick={() => addPersona(persona)}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PersonaManager;
+
+
+import React, { useState } from 'react';
 
 const rolesData = {
   Developer: ['Write Code', 'Fix Bugs', 'Review PRs'],
