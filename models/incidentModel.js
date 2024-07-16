@@ -1,3 +1,70 @@
+import React from 'react';
+import { useTable } from 'react-table';
+
+const TableComponent = ({ data }) => {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Issue ID',
+        accessor: 'id'
+      },
+      {
+        Header: 'Lessons Learned',
+        accessor: 'lesson'
+      }
+    ],
+    []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow
+  } = useTable({ columns, data });
+
+  return (
+    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+      <thead className="bg-gray-50">
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th
+                {...column.getHeaderProps()}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()} className="bg-white divide-y divide-gray-200">
+        {rows.map(row => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map(cell => (
+                <td
+                  {...cell.getCellProps()}
+                  className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                >
+                  {cell.render('Cell')}
+                </td>
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+export default TableComponent;
+
+
+
 If you want to use a multi-select dropdown in React but do not want to display the selected options inside the text box of the select component, you can use the `react-select` library with some customization. Specifically, you can use the `control` prop to customize the appearance of the selected options.
 
 Here's an example of how to implement a multi-select dropdown with hidden selected options inside the text box:
