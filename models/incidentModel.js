@@ -1,4 +1,27 @@
 import React from 'react';
+import TableComponent from './TableComponent';
+import HeadingComponent from './HeadingComponent';
+
+const App = () => {
+  const heading = "Lessons Learned Table";
+
+  const data = [
+    { id: '1', lesson: 'Improve deployment process' },
+    { id: '2', lesson: 'Enhance code review practices' },
+    { id: '3', lesson: 'Better communication channels' }
+  ];
+
+  return (
+    <div className="App">
+      <HeadingComponent heading={heading} />
+      <TableComponent data={data} />
+    </div>
+  );
+};
+
+export default App;
+
+import React from 'react';
 import { useTable } from 'react-table';
 
 const TableComponent = ({ data }) => {
