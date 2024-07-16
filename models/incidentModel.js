@@ -1,4 +1,44 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
+
+const MultiSelectDropdown = () => {
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+  ];
+
+  const handleChange = (selectedOptions) => {
+    setSelectedOptions(selectedOptions);
+  };
+
+  return (
+    <div>
+      <h1>Multi-Select Dropdown</h1>
+      <Select
+        isMulti
+        value={selectedOptions}
+        onChange={handleChange}
+        options={options}
+      />
+      <div>
+        <h2>Selected Options:</h2>
+        {selectedOptions.map((option) => (
+          <div key={option.value}>{option.label}</div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MultiSelectDropdown;
+
+
+
+import React, { useState } from 'react';
 import { FaPlus, FaTimes } from 'react-icons/fa';
 
 const PersonaManager = () => {
