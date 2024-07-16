@@ -1,3 +1,98 @@
+If you want to use a multi-select dropdown in React but do not want to display the selected options inside the text box of the select component, you can use the `react-select` library with some customization. Specifically, you can use the `control` prop to customize the appearance of the selected options.
+
+Here's an example of how to implement a multi-select dropdown with hidden selected options inside the text box:
+
+### Installation
+
+First, install the `react-select` package:
+
+```sh
+npm install react-select
+```
+
+### Implementation
+
+Here's how you can create a multi-select dropdown in React where the selected options are not shown inside the text box:
+
+```javascript
+import React, { useState } from 'react';
+import Select, { components } from 'react-select';
+
+const MultiSelectDropdown = () => {
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+  ];
+
+  const handleChange = (selectedOptions) => {
+    setSelectedOptions(selectedOptions);
+  };
+
+  // Custom control to hide the selected options in the text box
+  const CustomControl = ({ children, ...props }) => {
+    return (
+      <components.Control {...props}>
+        {children}
+        <div style={{ display: 'none' }}>
+          {props.getValue().map(option => option.label).join(', ')}
+        </div>
+      </components.Control>
+    );
+  };
+
+  return (
+    <div>
+      <h1>Multi-Select Dropdown</h1>
+      <Select
+        isMulti
+        value={selectedOptions}
+        onChange={handleChange}
+        options={options}
+        components={{ Control: CustomControl }}
+      />
+      <div>
+        <h2>Selected Options:</h2>
+        {selectedOptions.map((option) => (
+          <div key={option.value}>{option.label}</div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MultiSelectDropdown;
+```
+
+### Explanation
+
+1. **State Management**:
+   - `selectedOptions`: State to manage the selected options from the dropdown.
+
+2. **Options**:
+   - `options`: Array of objects representing the options available in the dropdown.
+
+3. **`react-select` Component**:
+   - `<Select>`: The main component from `react-select` used to create the dropdown.
+   - `isMulti`: Prop that enables multi-select functionality.
+   - `value`: Prop to bind the selected options to the component state.
+   - `onChange`: Callback function to handle changes in the selected options.
+   - `components`: Prop to customize the internal components of `react-select`.
+
+4. **Custom Control Component**:
+   - `CustomControl`: A custom control component that hides the selected options inside the text box. It uses `components.Control` from `react-select` and hides the display of selected options by using inline styles.
+
+5. **Displaying Selected Options**:
+   - A simple map function to display the selected options below the dropdown.
+
+### Conclusion
+
+This example provides a basic implementation of a multi-select dropdown in React using `react-select` where the selected options are not shown inside the text box. You can further customize this example based on your needs and requirements.
+
+
 import React, { useState } from 'react';
 import Select from 'react-select';
 
