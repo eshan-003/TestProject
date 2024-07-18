@@ -1,3 +1,40 @@
+import React, { useState } from 'react';
+
+const personas = [
+  'Manager',
+  'Engineer',
+  'HR',
+  'Designer',
+  'Sales',
+  'Marketing',
+  'Support'
+];
+
+const PersonaDropdown = () => {
+  const [selectedPersona, setSelectedPersona] = useState('Manager');
+
+  const handleChange = (event) => {
+    setSelectedPersona(event.target.value);
+  };
+
+  return (
+    <div>
+      <h1>{selectedPersona}</h1>
+      <select value={selectedPersona} onChange={handleChange}>
+        {personas.map((persona, index) => (
+          <option key={index} value={persona}>
+            {persona}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+export default PersonaDropdown;
+
+
+
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
 
