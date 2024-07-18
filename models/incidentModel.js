@@ -1,4 +1,48 @@
 import React, { useState } from 'react';
+import 'tailwindcss/tailwind.css';
+
+const personas = [
+  'Manager',
+  'Engineer',
+  'HR',
+  'Designer',
+  'Sales',
+  'Marketing',
+  'Support'
+];
+
+const PersonaDropdown = () => {
+  const [selectedPersona, setSelectedPersona] = useState('Manager');
+
+  const handleChange = (event) => {
+    setSelectedPersona(event.target.value);
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-sm">
+        <h1 className="text-2xl font-bold mb-4 text-center">{selectedPersona}</h1>
+        <select
+          value={selectedPersona}
+          onChange={handleChange}
+          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+        >
+          {personas.map((persona, index) => (
+            <option key={index} value={persona}>
+              {persona}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+export default PersonaDropdown;
+
+
+
+import React, { useState } from 'react';
 
 const personas = [
   'Manager',
