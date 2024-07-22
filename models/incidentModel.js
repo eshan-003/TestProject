@@ -1,3 +1,31 @@
+Sure, here are 10 lessons learned for a manager persona based on the development and implementation of the 5 Why Analysis Dashboard:
+
+1. **Effective Communication:** Clear and consistent communication between developers, stakeholders, and end-users is crucial. Regular updates and feedback loops ensure everyone is on the same page and can contribute to the project's success.
+
+2. **Requirement Gathering:** Comprehensive requirement gathering and analysis at the project's onset help avoid scope creep and ensure that the final product meets the user's needs and expectations.
+
+3. **Agile Methodology:** Adopting an Agile methodology allows for iterative development and continuous improvement. Regular sprints and reviews help in identifying issues early and implementing changes promptly.
+
+4. **Data Integration:** Integrating data from multiple sources (ServiceNow, SharePoint) using batch jobs requires careful planning and testing to ensure data accuracy and consistency.
+
+5. **Semantic Search Implementation:** Implementing NLP-based semantic search can significantly improve the user experience by providing more relevant search results, but it requires proper training of models and continuous refinement.
+
+6. **Visualization:** Detailed visualizations using Chart.js provide valuable insights into incident trends and patterns, aiding in better decision-making. Ensure the visualizations are intuitive and easily interpretable.
+
+7. **Performance Optimization:** Using Elasticsearch for database operations ensures fast data retrieval and enhances the application's performance. Regular performance testing and optimization are necessary to maintain efficiency.
+
+8. **Security Measures:** Implementing robust security measures, such as authentication using LDAP and JWT, protects sensitive data and maintains user trust. Regular security audits are essential.
+
+9. **User Training:** Providing training sessions for end-users ensures they understand how to effectively use the dashboard, maximizing its potential and minimizing user errors.
+
+10. **Post-Deployment Support:** Continuous support and maintenance post-deployment are crucial for addressing any issues that arise and for implementing enhancements based on user feedback.
+
+
+
+
+
+
+
 import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
 
